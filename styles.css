@@ -1,0 +1,93 @@
+:root{
+    --background-colour: #232946;
+    --headline:#fffffe;
+    --paragraph:#b8c1ec;
+    --button:#eebbc3;
+    --button-text:#232946;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+h1{
+    color: var(--paragraph);
+}
+
+
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: var(--background-colour);
+    font-family: 'Poppins', sans-serif;
+    width: 100%;
+}
+
+button{
+    background-color:var(--button) ;
+    color: var(--button-text);
+    font-size: 1rem;
+    border-radius: 0.25rem;
+    border-style: solid;
+    border-color: var(--background-colour);
+    font-family: 'Poppins', sans-serif;
+    margin: 0.5rem;
+}
+
+button:hover{
+    background-color: var(--button-text);
+    color: var(--button);
+}
+
+.calculator{
+    background-color: var(--paragraph);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 1rem;
+}
+
+.display, .historyDisplay{
+    background-color: var(--headline);
+    padding: 0.5rem;
+    min-height: 0.5rem;
+    border: var(--background-colour);
+    border-width: 3px;
+    border-style: solid;
+    width: 13rem;
+}
+
+.historyDisplay{
+    margin-bottom: 0.25rem;
+}
+
+.display{
+    margin-top: 0.25rem;
+}
+
+.displays{
+    text-align: center;
+    margin-bottom: 0.25rem;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.bigButton{
+    padding: 1.5rem;
+    text-align: center;
+    width: 50%;
+}
+
+.buttons{
+    width: 100%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+}
+
+.numeralButton,.operationButton, #equals{
+    padding: 1rem;
+    width: 25%;
+}
