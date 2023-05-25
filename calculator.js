@@ -58,6 +58,21 @@ function operate(firstNumber,operator,secondNumber){
 
 }
 
+function equalsFunction(){
+    if(userInputs.length == 0 || userInputs.length == 1){
+        alert("You didn't input a complete equation");
+    } else if (userInputs.length == 2){
+        userInputs.push(calculatorScreen.innerHTML);
+        clearCalcScreen(calculatorScreen);
+        calculation = operate(userInputs[0],userInputs[1],userInputs[2]);
+        calculatorScreen.innerHTML = calculation;
+    } else if(userInputs.length == 3){
+        clearCalcScreen(calculatorScreen);
+        calculation = operate(userInputs[0],userInputs[1],userInputs[2]);
+        calculatorScreen.append(calculation);
+    }
+}
+
 /**
  * @param {Element} parent - The parent element that contains the elements we want to remove 
  */
@@ -79,32 +94,49 @@ function deleteChar(parent){
 // Adding event listeners for each numeral button
 numeralButton.forEach((button) => {
     button.addEventListener('click', () => {
-        calculatorScreen.append(button.value);
-        calculatorHistoryScreen.append(button.value)
-        userInputs.push(button.value);
+        if(userInputs.length == 0){
+            calculatorScreen.append(button.value);
+            calculatorHistoryScreen.append(button.value);
+        }else if(userInputs.length == 1){
+            userInputs.push(calculatorScreen.innerHTML);
+            clearCalcScreen(calculatorScreen);
+            calculatorScreen.append(button.value);
+            calculatorHistoryScreen.append(button.value)
+        } else if(userInputs.length == 2){
+            clearCalcScreen(calculatorScreen);
+            calculatorHistoryScreen.append(button.value)
+            calculatorScreen.append(button.value)
+            userInputs.push(calculatorScreen.innerHTML);
+        }
     })
 })
 
 // Adding event listeners for each operation button
 operationButton.forEach((button) => {
     button.addEventListener('click', () => {
-        if(userInputs.length == 1){
-            userInputs.push(button.value);
-            calculatorHistoryScreen.append(button.value);
+        if(userInputs.length == 0){
+            userInputs.push(calculatorScreen.innerHTML);
             clearCalcScreen(calculatorScreen);
-        }else if(userInputs == 2){
-            console.log("hi");
-        }else if(userInputs.length >= 3){
+            calculatorScreen.append(button.value);
+            calculatorHistoryScreen.append(button.value);
+        } else if(userInputs.length == 2){
+            userInputs.push(calculatorScreen.innerHTML);
+            clearCalcScreen(calculatorScreen);
             calculation = operate(userInputs[0],userInputs[1],userInputs[2]);
             userInputs.length = 0;
             userInputs.push(calculation,button.value);
-            calculatorScreen.innerHTML = calculation;
             calculatorHistoryScreen.append(button.value)
+            calculatorScreen.append(button.value)
+        } else if (userInputs.length == 3){
+            calculation = operate(userInputs[0],userInputs[1],userInputs[2]);
+            userInputs.length = 0;
+            userInputs.push(calculation, button.value);
             clearCalcScreen(calculatorScreen);
-            console.log(userInputs);
+            calculatorScreen.append(button.value);
+            calculatorHistoryScreen.append(button.value);
         }
     })
-})
+});
 
 clearButton.addEventListener('click', () => {
     clearCalcScreen(calculatorScreen);
@@ -117,16 +149,5 @@ deleteButton.addEventListener('click', () => {
 });
 
 equalsButton.addEventListener('click', () => {
-    if(userInputs.length == 2){
-        alert("Your forgot to put in the last number");
-    } else {
-        userInputs.push(calculatorScreen.innerHTML);
-        calculation = operate(userInputs[0],userInputs[1],userInputs[2]);
-        clearCalcScreen(calculatorScreen);
-        calculatorScreen.append(operate(userInputs[0],userInputs[1],userInputs[2]));
-        userInputs.length = 0
-        userInputs.push(calculation);
-        console.table(`Calculation: ${calculation}`);
-        console.table(userInputs);
-    }
+    equalsFunction();    
 });
