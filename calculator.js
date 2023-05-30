@@ -14,7 +14,15 @@ const equalsButton = document.querySelector('#equals');
 // Array that holds the users inputs
 const userInputs = [];
 // Calculation result 
-let calculation;
+let calculation = {
+    firstNumber: '',
+    operator: '',
+    secondNumber: '',
+    result: null 
+};
+// Temp variable to hold current screen result before it get's assigned to the calculation assignment
+let temp = '';
+
 
 // Basic Math Functions
 function add(firstNum, secondNum){
@@ -58,21 +66,6 @@ function operate(firstNumber,operator,secondNumber){
 
 }
 
-function equalsFunction(){
-    if(userInputs.length == 0 || userInputs.length == 1){
-        alert("You didn't input a complete equation");
-    } else if (userInputs.length == 2){
-        userInputs.push(calculatorScreen.innerHTML);
-        clearCalcScreen(calculatorScreen);
-        calculation = operate(userInputs[0],userInputs[1],userInputs[2]);
-        calculatorScreen.innerHTML = calculation;
-    } else if(userInputs.length == 3){
-        clearCalcScreen(calculatorScreen);
-        calculation = operate(userInputs[0],userInputs[1],userInputs[2]);
-        calculatorScreen.append(calculation);
-    }
-}
-
 /**
  * @param {Element} parent - The parent element that contains the elements we want to remove 
  */
@@ -91,48 +84,69 @@ function deleteChar(parent){
     }
 }
 
+/**
+ * EVENT LISTENERS
+ */
+
 // Adding event listeners for each numeral button
 numeralButton.forEach((button) => {
     button.addEventListener('click', () => {
-        if(userInputs.length == 0){
+        if(calculation['firstNumber'].length != 0 && calculation['operator'].length != 0 && calculation['secondNumber'].length != 0 && calculation['result'] != null){
+            calculatorScreen.append(button.value);
+            calculatorHistoryScreen.append(button.value)
+            temp += button.value
+            calculation['firstNumber'] = calculation['result'];
+            calculation['secondNumber'] = temp;
+        }else if(calculation['firstNumber'].length !=0 && calculation['secondNumber'] !=0 ){
+            calculatorScreen.append(button.value);
+            calculatorHistoryScreen.append(button.value)
+            temp += button.value;
+        }else if(calculation['secondNumber'].length != 0){
             calculatorScreen.append(button.value);
             calculatorHistoryScreen.append(button.value);
-        }else if(userInputs.length == 1){
-            userInputs.push(calculatorScreen.innerHTML);
-            clearCalcScreen(calculatorScreen);
+            temp += button.value;
+            calculation['secondNumber'] = temp;
+        }else{
             calculatorScreen.append(button.value);
-            calculatorHistoryScreen.append(button.value)
-        } else if(userInputs.length == 2){
-            clearCalcScreen(calculatorScreen);
-            calculatorHistoryScreen.append(button.value)
-            calculatorScreen.append(button.value)
-            userInputs.push(calculatorScreen.innerHTML);
+            calculatorHistoryScreen.append(button.value);
+            temp += button.value;
         }
     })
-})
+});
 
 // Adding event listeners for each operation button
 operationButton.forEach((button) => {
     button.addEventListener('click', () => {
-        if(userInputs.length == 0){
-            userInputs.push(calculatorScreen.innerHTML);
+        if(calculation['firstNumber'].length != 0 && calculation['operator'].length != 0 && calculation['secondNumber'].length != 0 && calculation['result'] != null){
+            clearCalcScreen(calculatorScreen);
+            calculation['firstNumber'] = calculation['result'];
+            calculation['operator'] = button.value;
+            calculation['secondNumber'] = temp;
+            calculation['result'] = operate(calculation['firstNumber'],calculation['operator'],calculation['secondNumber']);
+            calculatorScreen.append(calculation['result'],button.value);
+            calculatorHistoryScreen.append(button.value);
+            temp = '';
+        }else if(calculation['firstNumber'].length == 0){
+            calculation['firstNumber'] = temp;
+            calculation['operator'] = button.value
             clearCalcScreen(calculatorScreen);
             calculatorScreen.append(button.value);
             calculatorHistoryScreen.append(button.value);
-        } else if(userInputs.length == 2){
-            userInputs.push(calculatorScreen.innerHTML);
-            clearCalcScreen(calculatorScreen);
-            calculation = operate(userInputs[0],userInputs[1],userInputs[2]);
-            userInputs.length = 0;
-            userInputs.push(calculation,button.value);
-            calculatorHistoryScreen.append(button.value)
-            calculatorScreen.append(button.value)
-        } else if (userInputs.length == 3){
-            calculation = operate(userInputs[0],userInputs[1],userInputs[2]);
-            userInputs.length = 0;
-            userInputs.push(calculation, button.value);
-            clearCalcScreen(calculatorScreen);
+            temp = '';
+        }else if(calculation['firstNumber'].length != 0 && calculation['operator'].length != 0 && calculation['secondNumber'].length != 0){
+            calculation['result'] = operate(calculation['firstNumber'],calculation['operator'],calculation['secondNumber']);
+            clearCalcScreen(calculatorScreen)
             calculatorScreen.append(button.value);
+            calculatorHistoryScreen.append(button.value);
+            temp = '';
+        }else if(calculation['firstNumber'].length != 0 && calculation['operator'].length !=0 && calculation['secondNumber'].length == 0){
+            clearCalcScreen(calculatorScreen)
+            calculation['secondNumber'] = temp;
+            calculation['result'] = operate(calculation['firstNumber'],calculation['operator'],calculation['secondNumber']);
+            calculatorScreen.append(button.value);
+            calculatorHistoryScreen.append(button.value);
+            temp = '';
+        }else{
             calculatorHistoryScreen.append(button.value);
         }
     })
@@ -141,7 +155,11 @@ operationButton.forEach((button) => {
 clearButton.addEventListener('click', () => {
     clearCalcScreen(calculatorScreen);
     clearCalcScreen(calculatorHistoryScreen);
-    userInputs.length = 0;
+    calculation['firstNumber'] = '';
+    calculation['secondNumber'] = '';
+    calculation['operator'] = '';
+    calculation['result'] = null 
+    temp = '';
 });
 
 deleteButton.addEventListener('click', () => {
@@ -149,5 +167,18 @@ deleteButton.addEventListener('click', () => {
 });
 
 equalsButton.addEventListener('click', () => {
-    equalsFunction();    
+    if(calculation['firstNumber'].length == 0 && calculation['secondNumber'] == 0){
+        alert("Equation is incomplete");
+    } else if (calculation['firstNumber'].length != 0 && calculation['operator'].length != 0 && calculation['secondNumber'] != 0){
+        calculation['result'] = operate(calculation['firstNumber'],calculation['operator'],calculation['secondNumber']);
+        temp = '';
+        calculatorScreen.innerHTML = calculation['result'];
+    } else if(calculation['firstNumber'].length != 0 && calculation['operator'] != 0){
+        calculation['secondNumber'] = temp
+        clearCalcScreen(calculatorScreen);
+        calculation['result'] = operate(calculation['firstNumber'],calculation['operator'],calculation['secondNumber']);
+        calculatorScreen.append(calculation['result']);
+    } else {
+        alert("Equation is Incomplete");
+    }
 });
