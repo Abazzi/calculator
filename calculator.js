@@ -84,14 +84,6 @@ function deleteChar(parent){
     }
 }
 
-// function updateTempNumeralValue(num){
-//     return temp == '' ? (temp = num) : (temp += num); 
-// }
-
-// function updateTempOperatorValue(str){
-//     return temp = str;
-// }
-
 /**
  * EVENT LISTENERS
  */
