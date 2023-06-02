@@ -123,9 +123,8 @@ operationButton.forEach((button) => {
             clearCalcScreen(calculatorScreen);
             calculation['firstNumber'] = calculation['result'];
             calculation['operator'] = button.value;
-            calculation['result'] = operate(calculation['firstNumber'],calculation['operator'],calculation['secondNumber']);
             calculatorHistoryScreen.append(button.value);
-            calculatorScreen.append(calculation['result'],button.value);
+            calculatorScreen.append(button.value);
             temp = '';
         }else if(calculation['firstNumber'].length != 0 && calculation['operator'].length != 0 && calculation['secondNumber'].length != 0 && calculation['result'] == null){
             calculation['result'] = operate(calculation['firstNumber'],calculation['operator'],calculation['secondNumber']);
